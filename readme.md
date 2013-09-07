@@ -22,4 +22,4 @@ c.a
 
 ## Okay…
 
-So it's basically just a generalized `||=`.
+It's basically just a generalized `||=`. So maybe the name is a little misleading.
