@@ -111,4 +111,8 @@ Benchmark.realtime { people.unknown }
 
 ## Okay…
 
-It's basically just a generalized `||=`. So maybe the name is a little misleading.
+It's basically just a generalized `||=`. So maybe the name is a little misleading. *clear-throat*
+
+The nice thing about it is that you can use it in an ad-hoc way to define anonymous memoizing contexts as a replacement for variables, or as part of regular class definitions, just so you don't have to write `||=` all over the place. And in both cases the syntax is pretty much the same.
+
+But it doesn't do anything you couldn't do without it.
