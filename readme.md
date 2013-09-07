@@ -45,6 +45,68 @@ c2.x
 # => 'bx'
 ```
 
+### You can also give your contexts names
+
+This example is ultimately pointless, but it shows some more elaborate potential usage context that involves slow things and fast things.
+
+```ruby
+require 'call_by_need'
+require 'benchmark'
+
+class Genderizer
+  def self.genders(name)
+    [].tap do |_genders|
+      _genders << :girl if girl?(name)
+      _genders << :boy  if boy?(name)
+    end
+  end
+
+  def self.girl?(name)
+    sleep(0.5)
+    name =~ /^[amk]/
+  end
+
+  def self.boy?(name)
+    sleep(0.5)
+    name =~ /^[bk]/
+  end
+end
+
+class People
+  include CallByNeed
+
+  def initialize(genderizer)
+    declare(:kids) do
+      [ 'alice', 'bob', 'marie', 'kim' ]
+    end
+    declare(:genders) do |x|
+      x.kids.inject({}) do |acc, name|
+        acc.merge!(name => genderizer.genders(name))
+      end
+    end
+    declare(:girls) do |x|
+      x.kids.select { |name| genders[name].include?(:girl) }
+    end
+    declare(:boys) do |x|
+      x.kids.select { |name| genders[name].include?(:boy) }
+    end
+    declare(:unknown) do |x|
+      x.kids.select { |name| [ :boy, :girl ] & genders[name] == [ :boy, :girl ] }
+    end
+  end
+end
+
+people = People.new(Genderizer)
+people.evaluated?(:unknown)
+# => false
+Benchmark.realtime { people.girls }
+# => 4.005
+people.evaluated?(:unknown)
+# => false
+Benchmark.realtime { people.unknown }
+# => 0.00003
+```
+
 ## Okay…
 
 It's basically just a generalized `||=`. So maybe the name is a little misleading.

@@ -25,7 +25,7 @@ module CallByNeed
   end
 
   def get(name)
-    if var_get(name).respond_to?(:call)
+    unless evaluated?(name)
       store[name] = var_get(name).call(self)
     else
       var_get(name)
@@ -38,6 +38,10 @@ module CallByNeed
 
   def [](key)
     var_get(key)
+  end
+
+  def evaluated?(name)
+    !var_get(name).respond_to?(:call)
   end
 
 private
