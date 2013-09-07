@@ -101,8 +101,6 @@ class People
 end
 
 people = People.new(Genderizer)
-people.evaluated?(:unknown)
-# => false
 Benchmark.realtime { people.girls }
 # => 4.005
 people.evaluated?(:unknown)
