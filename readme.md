@@ -1,6 +1,16 @@
 # Call By Need
 
-So yeah, uhm, you can read about what that means on [Wikipedia](http://en.wikipedia.org/wiki/Evaluation_strategy#Call_by_need) (it's like an on-line encyclopedia type thing).
+So yeah, uhm, you can read about what that means on [Wikipedia](http://en.wikipedia.org/wiki/Evaluation_strategy#Call_by_need) (it's like an on-line encyclopedia type thing). Go and read it!
+
+Now that you know what it is, let me disappoint you by narrowing the definition a little:
+
+How does one do lazy evaluation in Ruby? By wrapping computations in lambdas and passing those around instead of their evaluated results.
+
+An instance of `CallByNeed::Context` is a somewhat usable container for lambdas. You're supposed to fill it with some names and computations that when evaluated yield the corresponding values for those names. That makes the evaluation of what's inside a `Context` lazy from the point of view of the part of the program that decided to pass around the ability to do certain things in the form of that `Context`. The other ingredient is memoization. `Context` instances only ever evaluate names once (by calling the block assigned to that name), and reuse the result after.
+
+If you use that more constrained definiton, the name makes a little more sense.
+
+Let's see what using it looks like!
 
 ## Examples
 
@@ -49,9 +59,12 @@ c2.x
 # => 'bx'
 ```
 
+Every declaration yields the `Context` instance that it belongs to at the time of its evaluation into its block argument (named `x` in the example). That means you can combine multiple `Context` instances into one, and a `Context` field that was defined earlier is able to see anything that exists at the time of its evaluation.
+
 ### You can also give your contexts names
 
-This example is ultimately pointless, but it shows some more elaborate potential usage context that involves slow things and fast things.
+The next example shows some more elaborate potential usage context that involves slow things and fast things. It is also meant to demonstrate that using `call_by_name` doesn't harm readability in cases where memoization is not that essential. Just use it for everything! :D
+
 
 ```ruby
 require 'call_by_need'
@@ -65,11 +78,13 @@ class Genderizer
     end
   end
 
+  # slow method!
   def self.girl?(name)
     sleep(0.5)
     name =~ /^[amk]/
   end
 
+  # another slow method!
   def self.boy?(name)
     sleep(0.5)
     name =~ /^[bk]/
@@ -109,10 +124,10 @@ Benchmark.realtime { people.unknown }
 # => 0.00003
 ```
 
-## Okay…
+## Okay…?
 
-It's basically just a generalized `||=`. So maybe the name is a little misleading. *clear-throat*
+So the whole thing is basically a generalized `||=`. But if you get used to passing around `Context` objects instead of lambdas or plain values, you get the laziness aspect on top of it.
 
-The nice thing about it is that you can use it in an ad-hoc way to define anonymous memoizing contexts as a replacement for variables, or as part of regular class definitions, just so you don't have to write `||=` all over the place. And in both cases the syntax is pretty much the same.
+The nice thing about it is that you can use it in an ad-hoc way to define anonymous memoizing contexts as a replacement for variables (add some non-determinism to your imperative code!), or as part of regular class definitions. And in both cases the syntax is pretty much the same.
 
 But it doesn't do anything you couldn't do without it.
