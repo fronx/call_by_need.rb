@@ -14,8 +14,12 @@ c = CallByNeed::Context.new do |c|
   c.declare(:a) { Time.now.utc }
 end
 
+Time.now.utc
+# => 2013-09-07 14:48:50 UTC
+sleep(5)
 c.a
 # => 2013-09-07 14:48:55 UTC
+sleep(2)
 c.b
 # => 2013-09-07 14:49:05 UTC
 c.a
