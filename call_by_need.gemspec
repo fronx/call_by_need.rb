@@ -5,6 +5,7 @@ Gem::Specification.new do |gem|
   gem.authors       = ["fronx"]
   gem.email         = ["fronx@wurmus.de"]
   gem.description   = %q{A little call-by-need implementation for recreational use.}
+  gem.summary       = %q{A scoped call-by-need module/class.}
   gem.homepage      = "https://github.com/fronx/call_by_need.rb"
 
   gem.files         = `git ls-files`.split("\n")
