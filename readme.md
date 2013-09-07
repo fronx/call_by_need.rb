@@ -4,9 +4,9 @@ So yeah, uhm, you can read about what that means on [Wikipedia](http://en.wikipe
 
 Now that you know what it is, let me disappoint you by narrowing the definition a little:
 
-How does one do lazy evaluation in Ruby? By wrapping computations in lambdas and passing those around instead of their evaluated results.
+How does one do lazy evaluation in Ruby? By wrapping computations in lambdas and passing those around instead of their evaluated results. An instance of `CallByNeed::Context` is a somewhat usable container for lambdas. You're supposed to fill it with some names and computations that when evaluated yield the corresponding values for those names. That makes the evaluation of what's inside a `Context` lazy from the point of view of the part of the program that decided to pass around the ability to do certain things in the form of that `Context`.
 
-An instance of `CallByNeed::Context` is a somewhat usable container for lambdas. You're supposed to fill it with some names and computations that when evaluated yield the corresponding values for those names. That makes the evaluation of what's inside a `Context` lazy from the point of view of the part of the program that decided to pass around the ability to do certain things in the form of that `Context`. The other ingredient is memoization. `Context` instances only ever evaluate names once (by calling the block assigned to that name), and reuse the result after.
+The other ingredient is memoization. `Context` instances only ever evaluate names once (by calling the block assigned to that name), and reuse the result after.
 
 If you use that more constrained definiton, the name makes a little more sense.
 
