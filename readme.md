@@ -79,19 +79,19 @@ class People
     declare(:kids) do
       [ 'alice', 'bob', 'marie', 'kim' ]
     end
-    declare(:genders) do |x|
-      x.kids.inject({}) do |acc, name|
+    declare(:genders) do
+      kids.inject({}) do |acc, name|
         acc.merge!(name => genderizer.genders(name))
       end
     end
-    declare(:girls) do |x|
-      x.kids.select { |name| genders[name].include?(:girl) }
+    declare(:girls) do
+      kids.select { |name| genders[name].include?(:girl) }
     end
-    declare(:boys) do |x|
-      x.kids.select { |name| genders[name].include?(:boy) }
+    declare(:boys) do
+      kids.select { |name| genders[name].include?(:boy) }
     end
-    declare(:unknown) do |x|
-      x.kids.select { |name| [ :boy, :girl ] & genders[name] == [ :boy, :girl ] }
+    declare(:unknown) do
+      boys & girls
     end
   end
 end
